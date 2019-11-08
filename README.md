@@ -1,6 +1,10 @@
 
 # C++ Renders for the Essay in Computer Graphics course
-This folder contains some example opengl renders for the computer graphics essay
+This folder contains some example opengl renders for the computer graphics essay.  
+These renders are heavily based upon the examples from https://learnopengl.com/About  
+* stencil_method -> https://learnopengl.com/Advanced-OpenGL/Stencil-testing  
+* z_buffer_method -> https://learnopengl.com/Advanced-OpenGL/Framebuffers  
+
 
 # Building
 The scripts should be cross platform compatible and buildable with cmake as long as the following dependencies from the cmake file are met:
