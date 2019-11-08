@@ -21,5 +21,8 @@ Headers:
 * link_directories($ENV{LEARNOPENGL_LIBRARY})
 -> https://github.com/JoeyDeVries/LearnOpenGL
 
+In addition to this, you must have opengl package support  
+-> find_package(OpenGL REQUIRED)
+
 # Notice
 There is a small hack where the shaders and resources are copied into build directory with cmake so it is necessary to rebuild cmake in order to see changes in the shader code (I know its ugly but I am lazy)
