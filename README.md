@@ -22,5 +22,4 @@ Headers:
 -> https://github.com/JoeyDeVries/LearnOpenGL
 
 # Notice
-There is a small hack where the shaders and resources are copied into build directory so it is necessary to rebuild cmake in order
-to see changes in the shader (I know its ugly but I am lazy)
+There is a small hack where the shaders and resources are copied into build directory with cmake so it is necessary to rebuild cmake in order to see changes in the shader code (I know its ugly but I am lazy)
