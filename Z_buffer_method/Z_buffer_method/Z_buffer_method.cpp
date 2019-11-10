@@ -18,6 +18,13 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 
+// Shaders
+Shader* usedPostShader;
+Shader* postShaderRef;
+Shader* postDepthShaderRef;
+Shader* postFilterShaderRef;
+Shader* postNoFilterShaderRef;
+
 // settings
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
@@ -77,8 +84,16 @@ int main()
     // build and compile shaders
     // -------------------------
     Shader shader("shaders/5.1.framebuffers.vs", "shaders/5.1.framebuffers.fs");
-    Shader screenShader("shaders/5.1.framebuffers_screen.vs", "shaders/5.1.framebuffers_screen.fs");
-
+    Shader postShader = Shader("shaders/5.1.framebuffers_screen.vs", "shaders/5.1.framebuffers_screen.fs");
+    Shader postDepthShader = Shader("shaders/5.1.framebuffers_screen.vs", "shaders/5.1.framebuffers_depth.fs");
+    Shader postFilterShader = Shader("shaders/5.1.framebuffers_screen.vs", "shaders/5.1.framebuffers_filter.fs");
+    Shader postNoFilterShader = Shader("shaders/5.1.framebuffers_screen.vs", "shaders/5.1.framebuffers_nofilter.fs");
+    postShaderRef = &postShader;
+    postDepthShaderRef = &postDepthShader;
+    postFilterShaderRef = &postFilterShader;
+    postNoFilterShaderRef = &postNoFilterShader;
+    usedPostShader = postNoFilterShaderRef;
+     
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float cubeVertices[] = {
@@ -191,9 +206,21 @@ int main()
     shader.use();
     shader.setInt("texture1", 0);
 
-    screenShader.use();
-    screenShader.setInt("screenTexture", 0);
-    screenShader.setInt("depthTexture", 1);
+    postDepthShader.use();
+    postDepthShader.setInt("screenTexture", 0);
+    postDepthShader.setInt("depthTexture", 1);
+    
+    postFilterShader.use();
+    postFilterShader.setInt("screenTexture", 0);
+    postFilterShader.setInt("depthTexture", 1);
+
+    postNoFilterShader.use();
+    postNoFilterShader.setInt("screenTexture", 0);
+    postNoFilterShader.setInt("depthTexture", 1);
+
+    postShader.use();
+    postShader.setInt("screenTexture", 0);
+    postShader.setInt("depthTexture", 1);
 
     // framebuffer configuration
     // -------------------------
@@ -280,7 +307,7 @@ int main()
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
         glClear(GL_COLOR_BUFFER_BIT);
 
-        screenShader.use();
+        usedPostShader->use();
         glBindVertexArray(quadVAO);
         glActiveTexture(GL_TEXTURE0 + 0); // Texture unit 0
         glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// use the color attachment texture as the texture of the quad plane
@@ -324,6 +351,14 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        usedPostShader = postNoFilterShaderRef;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        usedPostShader = postDepthShaderRef;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        usedPostShader = postFilterShaderRef;
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        usedPostShader = postShaderRef;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

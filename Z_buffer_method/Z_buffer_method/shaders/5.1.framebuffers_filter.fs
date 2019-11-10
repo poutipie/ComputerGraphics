@@ -44,5 +44,5 @@ void main()
     vec3 col_actual = texture(screenTexture, TexCoords).rgb;
     float depth = texture(depthTexture, TexCoords).r;
     vec3 col_depth = vec3(depth / 3.0, depth / 3.0, depth / 3.0);
-    FragColor = vec4(col + col_actual, 1.0);
+    FragColor = vec4(col, 1.0);
 }
